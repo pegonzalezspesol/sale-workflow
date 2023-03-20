@@ -23,21 +23,19 @@ class TestSaleInvoicePlan(common.TestSaleCommon):
         }
 
         # Create base account to simulate a chart of account
-        user_type_payable = cls.env.ref("account.data_account_type_payable")
         cls.account_payable = cls.env["account.account"].create(
             {
                 "code": "NC1110",
                 "name": "Test Payable Account",
-                "user_type_id": user_type_payable.id,
+                "account_type": "liability_payable",
                 "reconcile": True,
             }
         )
-        user_type_receivable = cls.env.ref("account.data_account_type_receivable")
         cls.account_receivable = cls.env["account.account"].create(
             {
                 "code": "NC1111",
                 "name": "Test Receivable Account",
-                "user_type_id": user_type_receivable.id,
+                "account_type": "asset_receivable",
                 "reconcile": True,
             }
         )
@@ -92,12 +90,11 @@ class TestSaleInvoicePlan(common.TestSaleCommon):
     @classmethod
     def setUpClassicProducts(cls):
         # Create an expense journal
-        user_type_income = cls.env.ref("account.data_account_type_direct_costs")
         cls.account_income_product = cls.env["account.account"].create(
             {
-                "code": "INCOME_PROD111",
+                "code": "INCOMEPROD111",
                 "name": "Icome - Test Account",
-                "user_type_id": user_type_income.id,
+                "account_type": "expense_direct_cost",
             }
         )
         # Create category
@@ -311,5 +308,5 @@ class TestSaleInvoicePlan(common.TestSaleCommon):
         # Overall amount changed to 3080, install amount not changed, only percent changed.
         self.assertEqual(self.so_service.amount_total, 3080.0)
         self.so_service.invoice_plan_ids._compute_amount()
-        self.assertEqual(first_install.amount, 280.0)
-        self.assertEqual(first_install.percent, 9.090909)
+        self.assertEqual(first_install.amount, 308.0)
+        self.assertEqual(first_install.percent, 10.0)

@@ -1,6 +1,7 @@
 # Copyright 2019 Ecosoft Co., Ltd (http://ecosoft.co.th/)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html)
 from odoo import models
+from odoo.fields import Command
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -17,7 +18,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             or sale.invoice_plan_ids.filtered("to_invoice")
         )
         for plan in invoice_plans.sorted("installment"):
-            makeinv_wizard = {"advance_payment_method": "delivered"}
+            makeinv_wizard = {
+                "advance_payment_method": "delivered",
+                "sale_order_ids": [Command.set(sale.ids)],
+            }
             if plan.invoice_type == "advance":
                 makeinv_wizard["advance_payment_method"] = "percentage"
                 makeinv_wizard["amount"] = plan.percent

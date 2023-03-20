@@ -6,10 +6,10 @@ from odoo import models
 class SaleAdvancePaymentInv(models.TransientModel):
     _inherit = "sale.advance.payment.inv"
 
-    def _create_invoice(self, order, so_line, amount):
-        invoice = super()._create_invoice(order, so_line, amount)
+    def _create_invoices(self, sale_orders):
+        invoices = super()._create_invoices(sale_orders)
         invoice_plan_id = self._context.get("invoice_plan_id")
         if invoice_plan_id:
             plan = self.env["sale.invoice.plan"].browse(invoice_plan_id)
-            plan.invoice_move_ids += invoice
-        return invoice
+            plan.invoice_move_ids += invoices
+        return invoices
