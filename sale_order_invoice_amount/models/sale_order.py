@@ -1,6 +1,5 @@
 # Copyright (C) 2021 ForgeFlow S.L.
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
-import json
 
 from odoo import api, fields, models
 from odoo.tools.misc import formatLang
@@ -46,16 +45,17 @@ class SaleOrder(models.Model):
         "order_line.price_unit",
         "amount_total",
         "amount_untaxed",
+        "currency_id",
         "state",
         "invoice_ids",
         "invoice_ids.amount_total_signed",
         "amount_total",
         "invoice_ids.state",
     )
-    def _compute_tax_totals_json(self):
-        res = super(SaleOrder, self)._compute_tax_totals_json()
+    def _compute_tax_totals(self):
+        res = super(SaleOrder, self)._compute_tax_totals()
         lang_env = self.with_context(lang=self.partner_id.lang).env
-        total_json = json.loads(self.tax_totals_json)
+        total_json = self.tax_totals
         total_json.update(
             {
                 "invoiced_amount": self.invoiced_amount,
@@ -68,5 +68,5 @@ class SaleOrder(models.Model):
                 ),
             }
         )
-        self.tax_totals_json = json.dumps(total_json)
+        self.tax_totals = total_json
         return res

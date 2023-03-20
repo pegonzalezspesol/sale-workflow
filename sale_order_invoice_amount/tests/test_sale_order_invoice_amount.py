@@ -17,27 +17,13 @@ class TestSaleOrderInvoiceAmount(common.TransactionCase):
         cls.res_partner_2 = cls.env["res.partner"].create({"name": "Partner 12"})
         # Products
         cls.product_1 = cls.env["product.product"].create(
-            {"name": "Desk Combination", "type": "product"}
+            {"name": "Desk Combination", "detailed_type": "consu"}
         )
         cls.product_2 = cls.env["product.product"].create(
-            {"name": "Conference Chair", "type": "product"}
+            {"name": "Conference Chair", "detailed_type": "consu"}
         )
         cls.product_3 = cls.env["product.product"].create(
-            {"name": "Repair Services", "type": "service"}
-        )
-        # Location
-        cls.stock_warehouse = cls.env["stock.warehouse"].search(
-            [("company_id", "=", cls.env.company.id)], limit=1
-        )
-        cls.stock_location_14 = cls.env["stock.location"].create(
-            {"name": "Shelf 2", "location_id": cls.stock_warehouse.lot_stock_id.id}
-        )
-        # Replenish products
-        cls.env["stock.quant"]._update_available_quantity(
-            cls.product_1, cls.stock_location_14, 10
-        )
-        cls.env["stock.quant"]._update_available_quantity(
-            cls.product_2, cls.stock_location_14, 10
+            {"name": "Repair Services", "detailed_type": "service"}
         )
         # Sale Order
         cls.tax = cls.env["account.tax"].create(
