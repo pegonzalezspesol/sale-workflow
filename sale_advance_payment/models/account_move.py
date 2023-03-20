@@ -1,7 +1,6 @@
 # Copyright 2022 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import json
 
 from odoo import models
 
@@ -13,11 +12,8 @@ class AccountMove(models.Model):
         # Automatic reconciliation of payment when invoice confirmed.
         res = super(AccountMove, self).action_post()
         sale_order = self.mapped("line_ids.sale_line_ids.order_id")
-        if (
-            sale_order
-            and json.loads(self.invoice_outstanding_credits_debits_widget) is not False
-        ):
-            json_invoice_outstanding_data = json.loads(
+        if sale_order and self.invoice_outstanding_credits_debits_widget is not False:
+            json_invoice_outstanding_data = dict(
                 self.invoice_outstanding_credits_debits_widget
             ).get("content", [])
             for data in json_invoice_outstanding_data:

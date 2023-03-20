@@ -1,7 +1,6 @@
 # Copyright (C) 2021 ForgeFlow S.L.
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
 
-import json
 
 from odoo import fields
 from odoo.exceptions import ValidationError
@@ -239,7 +238,7 @@ class TestSaleAdvancePayment(common.TransactionCase):
         # Compare payments
         rate = self.currency_rate.rate
         payment_list = [100 * rate, 200, 250 * rate, 400]
-        payments = json.loads(invoice.invoice_outstanding_credits_debits_widget)
+        payments = dict(invoice.invoice_outstanding_credits_debits_widget)
         result = [d["amount"] for d in payments["content"]]
         self.assertEqual(set(payment_list), set(result))
 
